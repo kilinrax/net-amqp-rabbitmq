@@ -71,7 +71,7 @@ void die_on_amqp_error(pTHX_ amqp_rpc_reply_t x, amqp_connection_state_t conn, c
       /* Otherwise, give a more generic croak. */
       else {
         Perl_croak(aTHX_ "%s: %s\n", context,
-                x.library_error ? strerror(x.library_error) : "(end-of-stream)");
+                x.library_error ? amqp_error_string2(x.library_error) : "(end-of-stream)");
       }
       break;
 
@@ -895,7 +895,7 @@ net_amqp_rabbitmq_connect(conn, hostname, options)
     char *vhost = "/";
     int port = 5672;
     int channel_max = 0;
-    int frame_max = 131072;
+    uint32_t frame_max = 131072;
     int heartbeat = 0;
     double timeout = -1;
     struct timeval to;
